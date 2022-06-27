@@ -46,7 +46,7 @@ class RedirectAPI(APIView):
 
     def get_object(self, slug):
         try:
-            return Link.objects.get(slug=slug)
+            return Link.objects.get(slug=slug, active=True)
         except Link.DoesNotExist:
             raise Http404
 
