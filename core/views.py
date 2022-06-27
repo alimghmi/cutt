@@ -24,7 +24,8 @@ class APIRoot(APIView):
     def get(self, request):
         return Response({
             'users': reverse('user-list', request=request),
-            'links': reverse('link-list', request=request)
+            'links': reverse('link-list', request=request),
+            'signup': reverse('singup-api', request=request),
         })
 
 
