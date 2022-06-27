@@ -1,8 +1,10 @@
 from django.http import Http404
 from django.shortcuts import redirect
 from rest_framework.views import APIView
+from rest_framework.reverse import reverse
 from django.contrib.auth.models import User
 from rest_framework.response import Response
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import (IsAuthenticated,
@@ -14,6 +16,16 @@ from core.models import (Link, Viewer, Visitor)
 from core.serializers import (ReadUserSerializer, WriteLinkSerializer, 
                                 ReadLinkSerializer, 
                                 WriteUserSerializer)
+
+
+
+class APIRoot(APIView):
+
+    def get(self, request):
+        return Response({
+            'users': reverse('user-list', request=request),
+            'links': reverse('link-list', request=request)
+        })
 
 
 class LinkViewSet(ModelViewSet):
@@ -32,7 +44,7 @@ class LinkViewSet(ModelViewSet):
 
 class UserViewSet(ModelViewSet):
 
-    queryset = User.objects.all()
+    queryset = User.objects.prefetch_related('links')
     permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):
