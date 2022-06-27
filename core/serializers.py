@@ -7,11 +7,37 @@ from core import utils
 from core.models import Link
 
 
+class ReadLinkSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Link
+        fields =  ['id', 'origin', 'slug', 'active', 'updated_at', 'created_at']
+        read_only_field = fields
+
+
+class WriteLinkSerializer(serializers.ModelSerializer):
+
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    slug = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Link
+        fields = ['id', 'user', 'origin', 'slug', 'active']
+
+    def create(self, validated_data):
+        if not validated_data.get('slug', None):
+            validated_data['slug'] = utils.generate_shorten_link(model=self.Meta.model)
+
+        return super().create(validated_data)
+
+
 class ReadUserSerializer(serializers.ModelSerializer):
+
+    links = ReadLinkSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'links']
         read_only_fields = fields
 
 
@@ -39,26 +65,3 @@ class WriteUserSerializer(serializers.ModelSerializer):
             validated_data.pop('password', None)
             
         return super().update(instance, validated_data)
-
-class ReadLinkSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Link
-        fields =  ['id', 'origin', 'slug', 'active', 'updated_at', 'created_at']
-        read_only_field = fields
-
-
-class WriteLinkSerializer(serializers.ModelSerializer):
-
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    slug = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Link
-        fields = ['id', 'user', 'origin', 'slug', 'active']
-
-    def create(self, validated_data):
-        if not validated_data.get('slug', None):
-            validated_data['slug'] = utils.generate_shorten_link(model=self.Meta.model)
-
-        return super().create(validated_data)
