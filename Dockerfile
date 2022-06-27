@@ -10,4 +10,3 @@ RUN pip install -r requirements.txt
 
 COPY . .
 RUN chmod +x launch.sh
-CMD ['./launch.sh']
