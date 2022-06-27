@@ -10,6 +10,7 @@ router.register('users', views.UserViewSet, basename='user')
 
 urlpatterns = router.urls
 urlpatterns += [
+                    path('', views.APIRoot.as_view(), name='root'),
                     path('signup/', views.SignupAPI.as_view(), name='singup-api'),
                     path('stats/<slug:slug>/', views.StatsAPI.as_view(), name='stats-api'),
                     path('<slug:slug>/', views.RedirectAPI.as_view(), name='redirect-api'),
