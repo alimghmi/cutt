@@ -13,7 +13,7 @@ services:
     environment:
       PYTHONUNBUFFERED: 0 # preventing print messages to show up
     env_file:
-      - .env.prod
+      - ./envs/.env.prod
     depends_on:
       - db
   db:
@@ -21,7 +21,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env.db.prod
+      - ./envs/.env.db.prod
   nginx:
     build: ./nginx
     ports:
