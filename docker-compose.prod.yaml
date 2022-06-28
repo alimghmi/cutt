@@ -3,7 +3,7 @@ version: '3.3'
 services:
   web:
     build: 
-      context: .
+      context: ./cutt/
       dockerfile: Dockerfile.prod
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     expose:
@@ -21,7 +21,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env.prod.db
+      - .env.db.prod
   nginx:
     build: ./nginx
     ports:
